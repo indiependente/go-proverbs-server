@@ -1,0 +1,13 @@
+version: '3.3'
+
+services:
+    proverber-server:
+        image: indiependente/proverber-server
+        ports:
+         - 8080:8080
+         - 9090:9090
+        environment:
+         - LOG_LEVEL=INFO
+         - HTTP_PORT=8080
+         - GRPC_HOST=localhost
+         - GRPC_PORT=9090

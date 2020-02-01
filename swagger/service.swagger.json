@@ -1,0 +1,55 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "proto/service.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/proverb": {
+      "post": {
+        "summary": "Proverb returns a Go proverb.",
+        "operationId": "Proverb",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/rpcProverbResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/rpcProverbRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Proverber"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "rpcProverbRequest": {
+      "type": "object"
+    },
+    "rpcProverbResponse": {
+      "type": "object",
+      "properties": {
+        "proverb": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

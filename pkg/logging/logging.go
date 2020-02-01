@@ -18,12 +18,13 @@ type ProverbLogger interface {
 	Proverb(string) ProverbLogger
 }
 
-// PLogger implements the LogChainer interface and relies on http://github.com/rs/zerolog
+// PLogger implements the ProverbLogger interface and relies on http://github.com/rs/zerolog
 type PLogger struct {
 	logger.Logger
 	lggr zerolog.Logger
 }
 
+// NewPLogger returns a new PLogger.
 func NewPLogger(service string, level logger.LogLevel) PLogger {
 	return PLogger{
 		logger.GetLogger(service, level),

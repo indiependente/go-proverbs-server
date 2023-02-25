@@ -5,12 +5,12 @@ import (
 
 	"github.com/go-openapi/strfmt"
 	goproverbs "github.com/indiependente/go-proverbs"
-	"github.com/indiependente/go-proverbs-server/rpc"
+	service "github.com/indiependente/go-proverbs-server/rpc/service/v1"
 	grpctransport "github.com/indiependente/go-proverbs-server/transport/grpc"
 )
 
 // Proverb returns a Go proverb.
-func (srv Server) Proverb(ctx context.Context, req *rpc.ProverbRequest) (*rpc.ProverbResponse, error) {
+func (srv Server) Proverb(ctx context.Context, req *service.ProverbRequest) (*service.ProverbResponse, error) {
 	id, ok := ctx.Value(grpctransport.RequestIDKey).(string)
 	if !ok {
 		srv.logger.Error("could not type assert request id from context", nil)
@@ -19,7 +19,7 @@ func (srv Server) Proverb(ctx context.Context, req *rpc.ProverbRequest) (*rpc.Pr
 	prvb := goproverbs.Proverb()
 
 	srv.logger.Proverb(prvb).RequestID(strfmt.UUID(id)).Info("proverb generated")
-	return &rpc.ProverbResponse{
+	return &service.ProverbResponse{
 		Proverb: prvb,
 	}, nil
 }

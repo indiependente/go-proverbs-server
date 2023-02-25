@@ -1,0 +1,5 @@
+{
+    "name": "Go Protobuf",
+    "image":"mcr.microsoft.com/devcontainers/go",
+    "postCreateCommand": "go install github.com/bufbuild/buf/cmd/buf@latest"
+}

@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"os"
+	"log"
 
 	"github.com/indiependente/go-proverbs-server/pkg/logging"
 	"github.com/indiependente/go-proverbs-server/server"
@@ -15,19 +15,19 @@ const (
 )
 
 func main() {
-	grpcPort := os.Getenv("GRPC_PORT")
-	grpcHost := os.Getenv("GRPC_HOST")
-	httpPort := os.Getenv("HTTP_PORT")
-
-	log := logging.NewPLogger(service, logger.ParseLogLevel(os.Getenv("LOG_LEVEL")))
+	conf, err := parseConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log := logging.NewPLogger(service, logger.ParseLogLevel(conf.LogLevel))
 
 	// init server
 	srv := server.New(
 		log,
 		server.Config{
-			GRPCPort: grpcPort,
-			GRPCHost: grpcHost,
-			HTTPPort: httpPort,
+			GRPCPort: conf.GrpcPort,
+			GRPCHost: conf.GrpcHost,
+			HTTPPort: conf.HttpPort,
 		},
 	)
 
@@ -49,7 +49,7 @@ func main() {
 	}()
 
 	// Wait
-	err := shutdown.Wait(ctx, cancel, srv.Shutdown, log)
+	err = shutdown.Wait(ctx, cancel, srv.Shutdown)
 	if err != nil {
 		log.Fatal("Error while shutting down server", err)
 	}

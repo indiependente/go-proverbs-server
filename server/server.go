@@ -5,12 +5,14 @@ import (
 	"net"
 	"net/http"
 
-	gw "github.com/grpc-ecosystem/grpc-gateway/runtime"
+	gw "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/indiependente/go-proverbs-server/pkg/logging"
-	"github.com/indiependente/go-proverbs-server/rpc"
+	service "github.com/indiependente/go-proverbs-server/rpc/service/v1"
 	grpctransport "github.com/indiependente/go-proverbs-server/transport/grpc"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/reflection"
 )
 
 // Proverber is a server that responds with a proverb.
@@ -51,7 +53,8 @@ func (srv *Server) StartGRPC(ctx context.Context) error {
 
 	srv.grpcServer = grpc.NewServer(withServerUnaryInterceptor())
 
-	rpc.RegisterProverberServer(srv.grpcServer, srv)
+	reflection.Register(srv.grpcServer)
+	service.RegisterProverberServiceServer(srv.grpcServer, srv)
 
 	return srv.grpcServer.Serve(lis)
 }
@@ -62,8 +65,8 @@ func (srv *Server) StartGW(ctx context.Context) error {
 	// Register gRPC server endpoint
 	// Note: Make sure the gRPC server is running properly and accessible
 	mux := gw.NewServeMux()
-	opts := []grpc.DialOption{grpc.WithInsecure()}
-	err := rpc.RegisterProverberHandlerFromEndpoint(ctx, mux, srv.config.GRPCHost+":"+srv.config.GRPCPort, opts)
+	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	err := service.RegisterProverberServiceHandlerFromEndpoint(ctx, mux, srv.config.GRPCHost+":"+srv.config.GRPCPort, opts)
 	if err != nil {
 		return errors.Wrap(err, "Could not start grpc-gateway")
 	}

@@ -1,4 +1,4 @@
-FROM golang:1.14-rc-alpine as builder
+FROM golang:alpine as builder
 
 WORKDIR $GOPATH/src/github.com/indiependente/go-proverbs-server/
 ADD . .

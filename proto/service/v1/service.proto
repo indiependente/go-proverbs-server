@@ -1,15 +1,15 @@
 syntax = "proto3";
-package rpc;
+package service.v1;
 
 import "google/api/annotations.proto";
 
 // Proverber service definition.
-service Proverber {
+service ProverberService {
     // Proverb returns a Go proverb.
     rpc Proverb(ProverbRequest) returns (ProverbResponse) {
         option (google.api.http) = {
-            post: "/proverb"
-            body: "*"
+            get: "/proverb"
+            response_body: "proverb"
         };
     }
 }
